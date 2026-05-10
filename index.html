@@ -685,7 +685,7 @@ const save    = () => {
 };
 const saveConfig = () => localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
 const getCurrency = () => (config&&config.currency)||'FJD';
-const getDailyBudget = () => config ? (parseFloat(config.perPerson)||0)*(parseInt(config.people)||1) : 332;
+const getDailyBudget = () => config ? Math.round(((parseFloat(config.perPerson)||0)*(parseInt(config.people)||1))*100)/100 : 332;
 
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -743,7 +743,7 @@ function saveSetup(){
   config = {
     tripName:   document.getElementById('s-trip-name').value.trim()||'My Holiday',
     currency:   (document.getElementById('s-currency').value||'FJD').toUpperCase().trim()||'FJD',
-    perPerson,
+    perPerson: Math.round(perPerson*100)/100,
     people:     sPeople,
     email:      document.getElementById('s-email').value.trim(),
     storageType:selectedStorage,
@@ -800,7 +800,7 @@ function showSettings(){
   // Pre-fill setup form with current config
   document.getElementById('s-trip-name').value   = config.tripName||'';
   document.getElementById('s-currency').value    = config.currency||'FJD';
-  document.getElementById('s-per-person').value  = config.perPerson||'';
+  document.getElementById('s-per-person').value  = config.perPerson ? parseFloat(config.perPerson).toFixed(2) : '';
   sPeople = config.people||2;
   document.getElementById('s-people-val').textContent = sPeople;
   document.getElementById('s-email').value        = config.email||'';
