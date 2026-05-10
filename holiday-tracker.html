@@ -108,6 +108,37 @@
   .line-cat-btn.is-drinks{background:var(--coral-light);color:var(--coral);border-color:var(--coral);}
   .line-cat-btn.is-room{background:var(--slate-light);color:var(--slate);border-color:var(--slate);}
   .edit-line-highlight{background:var(--gold-light)!important;border-color:var(--gold)!important;}
+  .acc-card{border:2px solid var(--border);border-radius:16px;margin-bottom:0.6rem;overflow:hidden;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+  .acc-card-header{display:flex;align-items:center;gap:0.75rem;padding:0.9rem 1rem;}
+  .acc-card-emoji{font-size:1.8rem;line-height:1;flex-shrink:0;}
+  .acc-card-label{font-size:0.9rem;font-weight:800;line-height:1.2;}
+  .acc-card-sub{font-size:0.72rem;font-weight:500;margin-top:0.15rem;opacity:0.75;}
+  .acc-card-arrow{margin-left:auto;font-size:1.1rem;opacity:0.35;transition:transform 0.2s;}
+  .acc-card-body{padding:0 1rem 1rem;display:none;}
+  .acc-card.open .acc-card-body{display:block;}
+  .acc-card.open .acc-card-arrow{transform:rotate(90deg);opacity:0.6;}
+  .acc-card.open{border-width:2px;}
+  .acc-lunch.open{border-color:var(--ocean);background:var(--ocean-light);}
+  .acc-dinner.open{border-color:var(--palm);background:var(--palm-light);}
+  .acc-drinks.open{border-color:var(--coral);background:var(--coral-light);}
+  .acc-room.open{border-color:var(--slate);background:var(--slate-light);}
+  .acc-lunch.open .acc-card-label{color:var(--ocean);}
+  .acc-dinner.open .acc-card-label{color:var(--palm);}
+  .acc-drinks.open .acc-card-label{color:var(--coral);}
+  .acc-room.open .acc-card-label{color:var(--slate);}
+  .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.5rem;}
+  .qa-field{display:flex;flex-direction:column;gap:0.3rem;}
+  .qa-lbl{font-size:0.65rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;}
+  .qa-inp{padding:0.75rem 0.85rem;border-radius:10px;border:1.5px solid var(--border);font-family:'Montserrat',sans-serif;font-size:1rem;font-weight:700;background:var(--surface);color:var(--text);outline:none;width:100%;}
+  .qa-inp:focus{border-color:var(--palm);}
+  .qa-full{grid-column:span 2;}
+  .mode-toggle{display:flex;background:rgba(0,0,0,0.06);border-radius:12px;padding:3px;margin-bottom:1rem;}
+  .mode-btn{flex:1;padding:0.6rem 0.5rem;border-radius:9px;border:none;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;}
+  .mode-btn.active{background:var(--surface);color:var(--palm);box-shadow:0 1px 4px rgba(0,0,0,0.12);}
+  .qa-amount-row{margin-bottom:0.75rem;}
+  .qa-amount-label{font-size:0.62rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.35rem;}
+  .qa-amount-input{width:100%;padding:0.85rem 1rem;border-radius:12px;border:1.5px solid var(--border);font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+  .qa-amount-input:focus{border-color:var(--palm);}
   .drive-hint{background:var(--ocean-light);border-radius:12px;padding:0.75rem 1rem;font-size:0.76rem;font-weight:500;color:var(--ocean);line-height:1.55;margin-bottom:0.75rem;}
   .drive-hint strong{font-weight:800;}
   .chart-wrap{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:1.1rem 1rem 0.75rem;margin-bottom:1rem;}
@@ -370,68 +401,189 @@
   <!-- ── ADD RECEIPT ── -->
   <div id="tab-receipt" class="tab-content">
 
-    <div class="section-label">Restaurant / Shop Name</div>
-    <input type="text" id="rcpt-restaurant" placeholder="e.g. Beachside Cafe">
-
-    <div class="section-label">Date</div>
-    <input type="date" id="rcpt-date">
-
-    <div class="section-label">Meal and category</div>
-    <div class="toggle-grid" style="margin-bottom:0.6rem;">
-      <button class="toggle-btn active-lunch" id="rcpt-meal-lunch"   onclick="selectRcptMeal('lunch')">🍽 Lunch</button>
-      <button class="toggle-btn"              id="rcpt-meal-dinner"  onclick="selectRcptMeal('dinner')">🌙 Dinner</button>
-    </div>
-    <div class="toggle-grid" style="margin-bottom:1rem;">
-      <button class="toggle-btn" id="rcpt-meal-drinks" onclick="selectRcptMeal('standalonedrinks')">☕ Drinks Only</button>
-      <button class="toggle-btn" id="rcpt-meal-room"   onclick="selectRcptMeal('roomcharge')">🛍 Room Charge</button>
-    </div>
-
-    <div id="rcpt-cat-section">
-      <div class="section-label">Budget</div>
-      <div class="toggle-grid">
-        <button class="toggle-btn active-food"  id="rcpt-cat-food"   onclick="selectRcptCat('food')">Food</button>
-        <button class="toggle-btn"              id="rcpt-cat-drinks" onclick="selectRcptCat('drinks')">Drink / Coffee</button>
+    <!-- Restaurant + Date side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.75rem;">
+      <div>
+        <div class="section-label" style="margin-top:0;">🏪 Restaurant</div>
+        <input type="text" id="rcpt-restaurant" placeholder="Beachside Cafe" style="margin-bottom:0;">
+      </div>
+      <div>
+        <div class="section-label" style="margin-top:0;">📅 Date</div>
+        <input type="date" id="rcpt-date" style="margin-bottom:0;">
       </div>
     </div>
 
-    <div class="section-label">Item name</div>
-    <input type="text" id="rcpt-name" placeholder="e.g. Flat white, Pasta Napoli">
-    <div class="section-label">Amount</div>
-    <input type="number" id="rcpt-amt" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
-      <button class="big-btn btn-ocean" id="rcpt-add-btn" onclick="addReceiptLine()" style="margin-bottom:0.75rem;">Add Line</button>
-      <button class="big-btn btn-outline" id="rcpt-cancel-edit-btn" onclick="cancelEdit()" style="display:none;margin-bottom:0.75rem;">Cancel Edit</button>
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-quick" onclick="setMode('quick')">⚡ Quick Add</button>
+      <button class="mode-btn"        id="mode-line"  onclick="setMode('line')">📋 Line by Line</button>
     </div>
 
-    <div id="rcpt-lines-section" style="display:none;">
-      <div class="section-label">Lines on this receipt</div>
-      <div class="card" style="padding:0.25rem 1rem;"><div id="rcpt-lines-list"></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
-        <div class="stat-card" style="background:var(--palm-light);margin-bottom:0;padding:0.75rem 1rem;">
-          <div class="stat-label" style="color:var(--palm);">Food</div>
-          <div style="font-size:1.1rem;font-weight:800;color:var(--palm);" id="rcpt-food-total">$0.00</div>
+    <!-- ── ACCORDION CARDS ── -->
+    <div class="section-label">What are you adding? 👇</div>
+
+    <!-- LUNCH -->
+    <div class="acc-card acc-lunch" id="acc-lunch" onclick="toggleAcc('lunch')">
+      <div class="acc-card-header">
+        <div class="acc-card-emoji">🍽️</div>
+        <div>
+          <div class="acc-card-label">Lunch</div>
+          <div class="acc-card-sub">Food counts toward daily budget · drinks are extra</div>
         </div>
-        <div class="stat-card" style="background:var(--coral-light);margin-bottom:0;padding:0.75rem 1rem;">
-          <div class="stat-label" style="color:var(--coral);">Drinks</div>
-          <div style="font-size:1.1rem;font-weight:800;color:var(--coral);" id="rcpt-drinks-total">$0.00</div>
+        <div class="acc-card-arrow">›</div>
+      </div>
+      <div class="acc-card-body">
+        <!-- Quick add body -->
+        <div id="qa-body-lunch">
+          <div class="qa-grid">
+            <div class="qa-field">
+              <div class="qa-lbl" style="color:var(--palm);">🥗 Food</div>
+              <input class="qa-inp" type="number" id="qa-food" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+            <div class="qa-field">
+              <div class="qa-lbl" style="color:var(--coral);">🍹 Drinks</div>
+              <input class="qa-inp" type="number" id="qa-drinks" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+            <div class="qa-field qa-full">
+              <div class="qa-lbl" style="color:var(--gold);">💰 Tip</div>
+              <input class="qa-inp" type="number" id="qa-tip" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+          </div>
         </div>
-        <div class="stat-card" style="background:var(--slate-light);margin-bottom:0;padding:0.75rem 1rem;grid-column:span 2;">
-          <div class="stat-label" style="color:var(--slate);">Room Charges</div>
-          <div style="font-size:1.1rem;font-weight:800;color:var(--slate);" id="rcpt-room-total">$0.00</div>
+        <!-- Line by line body -->
+        <div id="lb-body-lunch" style="display:none;">
+          <div id="rcpt-cat-section">
+            <div class="section-label" style="margin-top:0;">Category</div>
+            <div class="toggle-grid" style="margin-bottom:0.75rem;">
+              <button class="toggle-btn active-food"  id="rcpt-cat-food"   onclick="selectRcptCat('food');event.stopPropagation();">🥗 Food</button>
+              <button class="toggle-btn"              id="rcpt-cat-drinks" onclick="selectRcptCat('drinks');event.stopPropagation();">🍹 Drinks</button>
+            </div>
+          </div>
+          <input type="text"   id="rcpt-name" placeholder="Item name e.g. Pasta Napoli" onclick="event.stopPropagation();">
+          <input type="number" id="rcpt-amt"  placeholder="0.00" inputmode="decimal" step="0.01" min="0" onclick="event.stopPropagation();">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <button class="big-btn btn-ocean" id="rcpt-add-btn" onclick="addReceiptLine();event.stopPropagation();" style="margin-bottom:0.5rem;">Add Line</button>
+            <button class="big-btn btn-outline" id="rcpt-cancel-edit-btn" onclick="cancelEdit();event.stopPropagation();" style="display:none;margin-bottom:0.5rem;">Cancel</button>
+          </div>
+          <div id="rcpt-lines-section" style="display:none;">
+            <div class="section-label">Lines added</div>
+            <div class="card" style="padding:0.25rem 1rem;margin-bottom:0.6rem;"><div id="rcpt-lines-list"></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+              <div class="stat-card" style="background:var(--palm-light);margin-bottom:0;padding:0.6rem 0.75rem;">
+                <div class="stat-label" style="color:var(--palm);">🥗 Food</div>
+                <div style="font-size:1rem;font-weight:800;color:var(--palm);" id="rcpt-food-total">$0.00</div>
+              </div>
+              <div class="stat-card" style="background:var(--coral-light);margin-bottom:0;padding:0.6rem 0.75rem;">
+                <div class="stat-label" style="color:var(--coral);">🍹 Drinks</div>
+                <div style="font-size:1rem;font-weight:800;color:var(--coral);" id="rcpt-drinks-total">$0.00</div>
+              </div>
+              <div class="stat-card" style="background:var(--slate-light);margin-bottom:0;padding:0.6rem 0.75rem;grid-column:span 2;">
+                <div class="stat-label" style="color:var(--slate);">🛍️ Room Charges</div>
+                <div style="font-size:1rem;font-weight:800;color:var(--slate);" id="rcpt-room-total">$0.00</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Photo section — shown only if storage enabled -->
-    <div id="rcpt-photo-section" style="display:none;">
-      <div class="section-label">Receipt photo link</div>
+    <!-- DINNER -->
+    <div class="acc-card acc-dinner" id="acc-dinner" onclick="toggleAcc('dinner')">
+      <div class="acc-card-header">
+        <div class="acc-card-emoji">🌙</div>
+        <div>
+          <div class="acc-card-label">Dinner</div>
+          <div class="acc-card-sub">Food counts toward daily budget · drinks are extra</div>
+        </div>
+        <div class="acc-card-arrow">›</div>
+      </div>
+      <div class="acc-card-body">
+        <div id="qa-body-dinner">
+          <div class="qa-grid">
+            <div class="qa-field">
+              <div class="qa-lbl" style="color:var(--palm);">🥗 Food</div>
+              <input class="qa-inp" type="number" id="qa-food-dinner" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+            <div class="qa-field">
+              <div class="qa-lbl" style="color:var(--coral);">🍹 Drinks</div>
+              <input class="qa-inp" type="number" id="qa-drinks-dinner" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+            <div class="qa-field qa-full">
+              <div class="qa-lbl" style="color:var(--gold);">💰 Tip</div>
+              <input class="qa-inp" type="number" id="qa-tip-dinner" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+            </div>
+          </div>
+        </div>
+        <div id="lb-body-dinner" style="display:none;">
+          <div>
+            <div class="section-label" style="margin-top:0;">Category</div>
+            <div class="toggle-grid" style="margin-bottom:0.75rem;">
+              <button class="toggle-btn active-food"  id="rcpt-cat-food-dinner"   onclick="selectRcptCatDinner('food');event.stopPropagation();">🥗 Food</button>
+              <button class="toggle-btn"              id="rcpt-cat-drinks-dinner" onclick="selectRcptCatDinner('drinks');event.stopPropagation();">🍹 Drinks</button>
+            </div>
+          </div>
+          <input type="text"   id="rcpt-name-dinner" placeholder="e.g. Steak" onclick="event.stopPropagation();">
+          <input type="number" id="rcpt-amt-dinner"  placeholder="0.00" inputmode="decimal" step="0.01" min="0" onclick="event.stopPropagation();">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+            <button class="big-btn btn-ocean" onclick="addReceiptLineDinner();event.stopPropagation();" style="margin-bottom:0.5rem;">Add Line</button>
+            <button class="big-btn btn-outline" id="rcpt-cancel-edit-btn-dinner" onclick="cancelEditDinner();event.stopPropagation();" style="display:none;margin-bottom:0.5rem;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS ONLY -->
+    <div class="acc-card acc-drinks" id="acc-drinks" onclick="toggleAcc('standalonedrinks')">
+      <div class="acc-card-header">
+        <div class="acc-card-emoji">☕</div>
+        <div>
+          <div class="acc-card-label">Drinks Only</div>
+          <div class="acc-card-sub">Coffees, poolside drinks · all out of pocket</div>
+        </div>
+        <div class="acc-card-arrow">›</div>
+      </div>
+      <div class="acc-card-body">
+        <div class="qa-grid">
+          <div class="qa-field qa-full">
+            <div class="qa-lbl" style="color:var(--coral);">☕ Amount</div>
+            <input class="qa-inp" type="number" id="qa-single" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROOM CHARGE -->
+    <div class="acc-card acc-room" id="acc-room" onclick="toggleAcc('roomcharge')">
+      <div class="acc-card-header">
+        <div class="acc-card-emoji">🛍️</div>
+        <div>
+          <div class="acc-card-label">Room Charge</div>
+          <div class="acc-card-sub">Souvenirs, spa, activities · settle at checkout</div>
+        </div>
+        <div class="acc-card-arrow">›</div>
+      </div>
+      <div class="acc-card-body">
+        <div class="qa-grid">
+          <div class="qa-field qa-full">
+            <div class="qa-lbl" style="color:var(--slate);">🛍️ Amount</div>
+            <input class="qa-inp" type="number" id="qa-room" placeholder="0.00" inputmode="decimal" step="0.01" min="0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo section -->
+    <div id="rcpt-photo-section" style="display:none;margin-top:0.5rem;">
+      <div class="section-label">📷 Receipt photo link</div>
       <div class="drive-hint" id="rcpt-photo-hint"></div>
-      <button class="big-btn btn-outline" id="rcpt-open-folder-btn" style="border-color:var(--ocean);color:var(--ocean);" onclick="openStorageFolder()">Open Folder</button>
+      <button class="big-btn btn-outline" style="border-color:var(--ocean);color:var(--ocean);" onclick="openStorageFolder()">Open Folder</button>
       <input type="url" id="rcpt-photo-url" placeholder="Paste the photo link here">
     </div>
 
-    <button class="big-btn btn-palm" onclick="addAllReceiptLines()">Save Receipt</button>
-    <button class="big-btn btn-coral" onclick="clearReceipt()">Clear Receipt</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.75rem;">
+      <button class="big-btn btn-palm" onclick="saveReceipt()" style="margin-bottom:0;">💾 Save</button>
+      <button class="big-btn btn-coral" onclick="clearReceipt()" style="margin-bottom:0;">🗑️ Clear</button>
+    </div>
 
   </div>
 
@@ -506,6 +658,9 @@ let rcptMeal  = 'lunch';
 let rcptCat   = 'food';
 let rcptLines = [];
 let editingLineId = null;
+let rcptMode  = localStorage.getItem('ht2_rcpt_mode')||'quick';
+let _idCounter = Date.now(); // monotonic ID counter — never reuse
+const nextId   = () => ++_idCounter;
 let fjdToAud  = 0.6321;
 let sPeople   = 2;
 
@@ -517,7 +672,17 @@ const todayStr = () => {
 const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',month:'short',day:'numeric'});
 const fmtAmt  = (n,cur) => '$'+Number(n).toFixed(2)+(cur?' '+cur:'');
 const esc     = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const save    = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+const save    = () => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch(e) {
+    // localStorage full or unavailable — alert once per session
+    if(!window._saveWarnShown) {
+      window._saveWarnShown = true;
+      alert('⚠️ Storage warning: your data could not be saved to this device. Email a backup now from the Today tab to avoid losing data.');
+    }
+  }
+};
 const saveConfig = () => localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
 const getCurrency = () => (config&&config.currency)||'FJD';
 const getDailyBudget = () => config ? (parseFloat(config.perPerson)||0)*(parseInt(config.people)||1) : 332;
@@ -609,6 +774,12 @@ function applyConfig(){
   document.getElementById('trip-room-currency').textContent = cur;
   document.getElementById('checkout-currency').textContent = cur;
   document.getElementById('rcpt-date').value = todayStr();
+  setMode(rcptMode);
+  // Open lunch card by default on first load
+  if(document.getElementById('acc-lunch')){
+    document.getElementById('acc-lunch').classList.add('open');
+    selectRcptMeal('lunch');
+  }
 
   // Photo section
   const hasStorage = c.storageType && c.storageType !== 'none';
@@ -659,14 +830,51 @@ async function fetchFXRate(){
 }
 
 // ── RECEIPT ───────────────────────────────────────────
+function setMode(mode){
+  rcptMode = mode;
+  localStorage.setItem('ht2_rcpt_mode', mode);
+  document.getElementById('mode-quick').className = 'mode-btn'+(mode==='quick'?' active':'');
+  document.getElementById('mode-line').className  = 'mode-btn'+(mode==='line' ?' active':'');
+  // Show correct body panels inside accordion based on mode
+  updateAccBodies();
+}
+
+function updateAccBodies(){
+  const isLine = rcptMode==='line';
+  // Lunch accordion has both quick and line-by-line bodies
+  const qaL  = document.getElementById('qa-body-lunch');
+  const lbL  = document.getElementById('lb-body-lunch');
+  const qaD  = document.getElementById('qa-body-dinner');
+  const lbD  = document.getElementById('lb-body-dinner');
+  if(qaL)  qaL.style.display  = isLine?'none':'block';
+  if(lbL)  lbL.style.display  = isLine?'block':'none';
+  if(qaD)  qaD.style.display  = isLine?'none':'block';
+  if(lbD)  lbD.style.display  = isLine?'block':'none';
+}
+
+// Accordion open/close — only one card open at a time
+function toggleAcc(meal){
+  const map = {lunch:'acc-lunch',dinner:'acc-dinner',standalonedrinks:'acc-drinks',roomcharge:'acc-room'};
+  const targetId = map[meal];
+  const isOpen = document.getElementById(targetId).classList.contains('open');
+  // Clear any in-progress edit when switching cards — prevents mismatched updates
+  if(editingLineId !== null) cancelEdit();
+  // Close all
+  ['acc-lunch','acc-dinner','acc-drinks','acc-room'].forEach(id=>{
+    document.getElementById(id).classList.remove('open');
+  });
+  // Open clicked (unless it was already open — acts as toggle)
+  if(!isOpen){
+    document.getElementById(targetId).classList.add('open');
+    selectRcptMeal(meal);
+  } else {
+    rcptMeal = 'lunch'; // fallback
+  }
+}
+
 function selectRcptMeal(m){
   rcptMeal = m;
   const isSD = m==='standalonedrinks', isRC = m==='roomcharge';
-  document.getElementById('rcpt-meal-lunch').className   = 'toggle-btn'+(m==='lunch'  ?' active-lunch':'');
-  document.getElementById('rcpt-meal-dinner').className  = 'toggle-btn'+(m==='dinner' ?' active-dinner':'');
-  document.getElementById('rcpt-meal-drinks').className  = 'toggle-btn'+(isSD         ?' active-standalone-drinks':'');
-  document.getElementById('rcpt-meal-room').className    = 'toggle-btn'+(isRC         ?' active-room':'');
-  document.getElementById('rcpt-cat-section').style.display = (isSD||isRC)?'none':'block';
   if(isSD)       rcptCat='drinks';
   else if(isRC)  rcptCat='room';
   else           selectRcptCat(rcptCat==='room'?'food':rcptCat);
@@ -674,8 +882,44 @@ function selectRcptMeal(m){
 
 function selectRcptCat(c){
   rcptCat=c;
-  document.getElementById('rcpt-cat-food').className   = 'toggle-btn'+(c==='food'  ?' active-food':'');
-  document.getElementById('rcpt-cat-drinks').className = 'toggle-btn'+(c==='drinks'?' active-drinks':'');
+  const foodBtn   = document.getElementById('rcpt-cat-food');
+  const drinksBtn = document.getElementById('rcpt-cat-drinks');
+  if(foodBtn)   foodBtn.className   = 'toggle-btn'+(c==='food'  ?' active-food':'');
+  if(drinksBtn) drinksBtn.className = 'toggle-btn'+(c==='drinks'?' active-drinks':'');
+}
+
+let rcptCatDinner = 'food';
+let editingLineDinnerId = null;
+
+function selectRcptCatDinner(c){
+  rcptCatDinner = c;
+  const f = document.getElementById('rcpt-cat-food-dinner');
+  const d = document.getElementById('rcpt-cat-drinks-dinner');
+  if(f) f.className = 'toggle-btn'+(c==='food'  ?' active-food':'');
+  if(d) d.className = 'toggle-btn'+(c==='drinks'?' active-drinks':'');
+}
+
+function addReceiptLineDinner(){
+  const name = document.getElementById('rcpt-name-dinner').value.trim()||'Item';
+  const amt  = parseFloat(document.getElementById('rcpt-amt-dinner').value);
+  if(!amt||amt<=0){showToast('Enter an amount');return;}
+  rcptLines.push({id:nextId(),name,amount:amt,meal:'dinner',category:rcptCatDinner});
+  document.getElementById('rcpt-name-dinner').value='';
+  document.getElementById('rcpt-amt-dinner').value='';
+  // Open Lunch card so the shared lines list is visible to the user
+  ['acc-lunch','acc-dinner','acc-drinks','acc-room'].forEach(id=>document.getElementById(id).classList.remove('open'));
+  document.getElementById('acc-lunch').classList.add('open');
+  rcptMeal = 'dinner'; // keep meal set to dinner for save
+  updateAccBodies();
+  renderRcptLines();
+  showToast('Dinner line added — tap Save when done');
+}
+
+function cancelEditDinner(){
+  document.getElementById('rcpt-name-dinner').value='';
+  document.getElementById('rcpt-amt-dinner').value='';
+  const btn=document.getElementById('rcpt-cancel-edit-btn-dinner');
+  if(btn) btn.style.display='none';
 }
 
 function addReceiptLine(){
@@ -691,7 +935,7 @@ function addReceiptLine(){
     document.getElementById('rcpt-add-btn').textContent='Add Line';
     document.getElementById('rcpt-cancel-edit-btn').style.display='none';
   } else {
-    rcptLines.push({id:Date.now()+Math.random(),name,amount:amt,meal,category});
+    rcptLines.push({id:nextId(),name,amount:amt,meal,category});
   }
   document.getElementById('rcpt-name').value='';
   document.getElementById('rcpt-amt').value='';
@@ -771,31 +1015,79 @@ function openStorageFolder(){
   else showToast('No folder URL set. Check Settings.');
 }
 
-function addAllReceiptLines(){
-  if(!rcptLines.length){showToast('Add at least one line first');return;}
+function saveReceipt(){
   const restaurant = document.getElementById('rcpt-restaurant').value.trim();
-  const photoUrl   = document.getElementById('rcpt-photo-url')&&document.getElementById('rcpt-photo-url').value.trim()||'';
+  const photoUrl   = (document.getElementById('rcpt-photo-url')&&document.getElementById('rcpt-photo-url').value.trim())||'';
   const date       = document.getElementById('rcpt-date').value||todayStr();
-  const isDinner   = rcptLines.some(l=>l.meal==='dinner');
-  rcptLines.forEach(l=>{
-    entries.push({id:Date.now()+Math.random(),date,meal:l.meal,category:l.category,amount:l.amount,note:l.name,restaurant:restaurant||'',photoUrl:photoUrl||''});
-  });
-  const n=rcptLines.length;
-  save(); showToast(n+' item'+(n===1?'':'s')+' saved!'); clearReceipt(); renderToday();
+  const isSD = rcptMeal==='standalonedrinks', isRC = rcptMeal==='roomcharge';
+  const baseMeal = isSD?'drinks':isRC?'room':rcptMeal;
+  let saved = 0;
+  let isDinner = false;
+
+  if(rcptMode==='quick'){
+    if(isSD){
+      const amt = parseFloat(document.getElementById('qa-single').value);
+      if(!amt||amt<=0){showToast('Enter an amount');return;}
+      entries.push({id:nextId(),date,meal:'drinks',category:'drinks',amount:amt,note:'Drinks',restaurant,photoUrl});
+      saved++;
+    } else if(isRC){
+      const amt = parseFloat(document.getElementById('qa-room').value);
+      if(!amt||amt<=0){showToast('Enter an amount');return;}
+      entries.push({id:nextId(),date,meal:'room',category:'room',amount:amt,note:'Room Charge',restaurant,photoUrl});
+      saved++;
+    } else {
+      // Lunch or Dinner — use meal-specific field IDs
+      const suffix  = baseMeal==='dinner'?'-dinner':'';
+      const food    = parseFloat(document.getElementById('qa-food'+suffix).value)||0;
+      const drinks  = parseFloat(document.getElementById('qa-drinks'+suffix).value)||0;
+      const tip     = parseFloat(document.getElementById('qa-tip'+suffix).value)||0;
+      if(food<=0&&drinks<=0&&tip<=0){showToast('Enter at least one amount');return;}
+      if(food>0)   { entries.push({id:nextId(),date,meal:baseMeal,category:'food',  amount:food,  note:'Food',  restaurant,photoUrl}); saved++; }
+      if(drinks>0) { entries.push({id:nextId(),date,meal:baseMeal,category:'drinks',amount:drinks,note:'Drinks',restaurant,photoUrl}); saved++; }
+      if(tip>0)    { entries.push({id:nextId(),date,meal:baseMeal,category:'room',  amount:tip,   note:'Tip',   restaurant,photoUrl}); saved++; }
+      if(baseMeal==='dinner') isDinner=true;
+    }
+  } else {
+    // Line by line mode
+    if(!rcptLines.length){showToast('Add at least one line first');return;}
+    isDinner = rcptLines.some(l=>l.meal==='dinner');
+    rcptLines.forEach(l=>{
+      entries.push({id:nextId(),date,meal:l.meal,category:l.category,amount:l.amount,note:l.name,restaurant,photoUrl});
+    });
+    saved = rcptLines.length;
+  }
+
+  save();
+  showToast(saved+' item'+(saved===1?'':'s')+' saved!');
+  clearReceipt();
+  renderToday();
   if(isDinner) showBackupModal();
 }
+
+// Keep old name as alias for safety
+function addAllReceiptLines(){ saveReceipt(); }
 
 function clearReceipt(){
   rcptLines=[]; editingLineId=null;
   renderRcptLines();
   document.getElementById('rcpt-restaurant').value='';
   document.getElementById('rcpt-date').value=todayStr();
-  document.getElementById('rcpt-name').value='';
-  document.getElementById('rcpt-amt').value='';
+  // Quick add fields
+  ['qa-food','qa-drinks','qa-tip','qa-food-dinner','qa-drinks-dinner','qa-tip-dinner','qa-single','qa-room','rcpt-name-dinner','rcpt-amt-dinner'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  // Line by line fields
+  const nameEl=document.getElementById('rcpt-name'); if(nameEl) nameEl.value='';
+  const amtEl=document.getElementById('rcpt-amt');   if(amtEl)  amtEl.value='';
   if(document.getElementById('rcpt-photo-url')) document.getElementById('rcpt-photo-url').value='';
-  document.getElementById('rcpt-add-btn').textContent='Add Line';
-  document.getElementById('rcpt-cancel-edit-btn').style.display='none';
+  const addBtn=document.getElementById('rcpt-add-btn');
+  if(addBtn) addBtn.textContent='Add Line';
+  const cancelBtn=document.getElementById('rcpt-cancel-edit-btn');
+  if(cancelBtn) cancelBtn.style.display='none';
   selectRcptMeal('lunch'); selectRcptCat('food');
+  ['acc-lunch','acc-dinner','acc-drinks','acc-room'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.classList.remove('open');
+  });
 }
 
 // ── DELETE ────────────────────────────────────────────
@@ -821,8 +1113,11 @@ function renderToday(){
   const rem=BUDGET-food;
   const pct=Math.max(0,Math.min(100,(rem/BUDGET)*100));
 
-  document.getElementById('today-remaining').textContent  = fmtAmt(rem,cur);
-  document.getElementById('header-remaining').textContent = fmtAmt(rem,cur);
+  const remDisplay = rem < 0
+    ? 'Over by '+fmtAmt(Math.abs(rem),cur)
+    : fmtAmt(rem,cur);
+  document.getElementById('today-remaining').textContent  = remDisplay;
+  document.getElementById('header-remaining').textContent = remDisplay;
   document.getElementById('today-progress').style.width   = pct+'%';
   document.getElementById('today-progress').style.background = pct<25?'#e8603c':pct<60?'#c97d18':'#1a6b45';
   document.getElementById('today-spent-label').textContent= fmtAmt(food,cur)+' spent of '+fmtAmt(BUDGET,cur);
@@ -834,14 +1129,14 @@ function renderToday(){
   const allDrinks=entries.filter(e=>e.category==='drinks').reduce((s,e)=>s+e.amount,0);
   const allRoom  =entries.filter(e=>e.category==='room').reduce((s,e)=>s+e.amount,0);
   const days=new Set(entries.map(e=>e.date)).size;
-  document.getElementById('trip-total-drinks').textContent = fmtAmt(allDrinks);
-  document.getElementById('trip-total-room').textContent   = fmtAmt(allRoom);
+  document.getElementById('trip-total-drinks').textContent = fmtAmt(allDrinks,cur);
+  document.getElementById('trip-total-room').textContent   = fmtAmt(allRoom,cur);
   document.getElementById('trip-days-label').textContent   = 'Across '+days+' day'+(days===1?'':'s');
   document.getElementById('trip-total-aud').textContent    = '~A$'+(allDrinks*fjdToAud).toFixed(2);
   document.getElementById('trip-room-aud').textContent     = '~A$'+(allRoom*fjdToAud).toFixed(2);
 
   const checkoutFJD=allDrinks+allRoom;
-  document.getElementById('checkout-total-fjd').textContent = fmtAmt(checkoutFJD);
+  document.getElementById('checkout-total-fjd').textContent = fmtAmt(checkoutFJD,cur);
   document.getElementById('checkout-total-aud').textContent = '~A$'+(checkoutFJD*fjdToAud).toFixed(2);
 
   const list=document.getElementById('today-entries-list');
@@ -854,7 +1149,7 @@ function renderToday(){
       <div style="flex:1;min-width:0;">
         <div style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.25rem;flex-wrap:wrap;">
           <span class="pill pill-${e.meal==='room'?'room':e.meal}">${e.meal}</span>
-          <span class="pill pill-${catClass}">${e.category==='food'?'Food':e.category==='room'?'Room Charge':'Drinks'}</span>
+          <span class="pill pill-${catClass}">${e.category==='food'?'Food':e.category==='room'?(e.note==='Tip'?'Tip ':'Room Charge'):'Drinks'}</span>
         </div>
         <div style="font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:0.15rem;">${esc(e.note||'No note')}</div>
         <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">${restLabel}${photoBtn}</div>
@@ -889,14 +1184,14 @@ function renderHistory(){
     const restsHtml=Object.entries(rests).map(([name,group])=>{
       const photoBtn=group.photoUrl
         ?`<a href="${esc(group.photoUrl)}" target="_blank" style="font-size:0.72rem;font-weight:700;color:var(--ocean);text-decoration:none;">View photo</a>`
-        :`<span style="font-size:0.72rem;color:var(--muted);">No photo</span>`;
+        :(config&&config.storageType&&config.storageType!=='none'?`<span style="font-size:0.72rem;color:var(--muted);">No photo</span>`:'');
       const lines=[...group.entries].reverse().map(e=>{
         const catClass=e.category==='room'?'room':e.category;
         return `<div class="entry-item" style="padding:0.65rem 0;">
           <div style="flex:1;min-width:0;">
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.15rem;">
               <span class="pill pill-${e.meal==='room'?'room':e.meal}">${e.meal}</span>
-              <span class="pill pill-${catClass}">${e.category==='food'?'Food':e.category==='room'?'Room Charge':'Drinks'}</span>
+              <span class="pill pill-${catClass}">${e.category==='food'?'Food':e.category==='room'?(e.note==='Tip'?'Tip':'Room Charge'):'Drinks'}</span>
             </div>
             <div style="font-size:0.78rem;font-weight:600;color:var(--text);">${esc(e.note||'No note')}</div>
           </div>
@@ -1112,19 +1407,22 @@ function sendEmailBackup(){
   const allRoom  =entries.filter(e=>e.category==='room').reduce((s,e)=>s+e.amount,0);
   summary+='CHECKOUT TOTAL: $'+(allDrinks+allRoom).toFixed(2)+' '+cur+'\n\n';
   summary+='--- FULL CSV ---\n';
-  summary+='Date,Meal,Category,Amount,Item,Restaurant\n';
-  summary+=entries.map(e=>`${e.date},${e.meal},${e.category},${e.amount.toFixed(2)},"${(e.note||'').replace(/"/g,'""')}","${(e.restaurant||'').replace(/"/g,'""')}"`).join('\n');
+  summary+=`Date,Meal,Category,Amount (${cur}),Item,Restaurant,Photo URL\n`;
+  summary+=entries.map(e=>`${e.date},${mealLabel(e.meal)},${catLabel(e.category)},${e.amount.toFixed(2)},"${(e.note||'').replace(/"/g,'""')}","${(e.restaurant||'').replace(/"/g,'""')}","${(e.photoUrl||'').replace(/"/g,'""')}"`).join('\n');
 
   const body=encodeURIComponent(summary);
   window.location.href=`mailto:${to}?subject=${subject}&body=${body}`;
 }
 
 // ── EXPORT ────────────────────────────────────────────
+const mealLabel = m => m==='lunch'?'Lunch':m==='dinner'?'Dinner':m==='drinks'?'Drinks Only':'Room Charge';
+const catLabel  = c => c==='food'?'Food':c==='room'?'Room Charge':'Drinks / Coffee';
+
 function exportCSV(){
   if(!entries.length){showToast('No data to export yet');return;}
   const cur=getCurrency();
   const header=`Date,Meal,Category,Amount (${cur}),Item,Restaurant,Photo URL\n`;
-  const rows=entries.map(e=>`${e.date},${e.meal},${e.category},${e.amount.toFixed(2)},"${(e.note||'').replace(/"/g,'""')}","${(e.restaurant||'').replace(/"/g,'""')}","${(e.photoUrl||'').replace(/"/g,'""')}"`).join('\n');
+  const rows=entries.map(e=>`${e.date},${mealLabel(e.meal)},${catLabel(e.category)},${e.amount.toFixed(2)},"${(e.note||'').replace(/"/g,'""')}","${(e.restaurant||'').replace(/"/g,'""')}","${(e.photoUrl||'').replace(/"/g,'""')}"`).join('\n');
   Object.assign(document.createElement('a'),{
     href:URL.createObjectURL(new Blob([header+rows],{type:'text/csv'})),
     download:(config?config.tripName.replace(/\s+/g,'-'):'holiday')+'-'+todayStr()+'.csv'
