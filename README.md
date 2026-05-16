@@ -2,7 +2,7 @@
 
 A mobile-first expense tracker for all-inclusive resort holidays. Built as a single HTML file — no app store, no backend, no subscription. Open the link, save it to your home screen, and start tracking.
 
-**Live app:** [paceymia.github.io/Holiday-Tracker/holiday-tracker.html](https://paceymia.github.io/Holiday-Tracker/holiday-tracker.html)
+**Live app:** [paceymia.github.io/Holiday-Tracker/index.html](https://paceymia.github.io/Holiday-Tracker/index.html)
 
 ---
 
